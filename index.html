@@ -404,8 +404,8 @@ Solutions: <span id="solutions"></span>
 
           let piece_idx = solution[r][c];
           let color
-          if (piece_idx < 0) color = 'black' // mark month and day by 2 black sqares
-          else if (isNaN(piece_idx)) color = 'white' // NaN represents filler tiles along ther border
+          if (piece_idx < 0) color = 'black' // mark month and day by 2 black squares
+          else if (isNaN(piece_idx)) color = 'white' // NaN represents filler tiles along the border
           else color = piece_colors[piece_idx];
           ctx.fillStyle = color;
           ctx.fillRect(col_offset, row_offset, tile_size, tile_size);
