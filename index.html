@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>A Puzzle a day solver</title>
+  <script>
+    function solve(month, day) {
+      let pieces = [
+        [
+          [
+            [1, 1],
+            [0, 1],
+            [0, 1],
+            [0, 1]],
+          [
+            [0, 1],
+            [0, 1],
+            [0, 1],
+            [1, 1]],
+          [
+            [1, 1],
+            [1, 0],
+            [1, 0],
+            [1, 0]],
+          [
+            [1, 0],
+            [1, 0],
+            [1, 0],
+            [1, 1]],
+          [
+            [1, 0, 0, 0],
+            [1, 1, 1, 1]],
+          [
+            [1, 1, 1, 1],
+            [0, 0, 0, 1]],
+          [
+            [0, 0, 0, 1],
+            [1, 1, 1, 1]],
+          [
+            [1, 1, 1, 1],
+            [1, 0, 0, 0]]],
+        [
+          [
+            [1, 1, 0],
+            [0, 1, 0],
+            [0, 1, 1]],
+          [
+            [1, 0, 0],
+            [1, 1, 1],
+            [0, 0, 1]],
+          [
+            [0, 1, 1],
+            [0, 1, 0],
+            [1, 1, 0]],
+          [
+            [0, 0, 1],
+            [1, 1, 1],
+            [1, 0, 0]]],
+        [
+          [
+            [1, 0],
+            [1, 1],
+            [0, 1],
+            [0, 1]],
+          [
+            [1, 0],
+            [1, 0],
+            [1, 1],
+            [0, 1]],
+          [
+            [0, 1],
+            [1, 1],
+            [1, 0],
+            [1, 0]],
+          [
+            [0, 1],
+            [0, 1],
+            [1, 1],
+            [1, 0]],
+          [
+            [0, 1, 1, 1],
+            [1, 1, 0, 0]],
+          [
+            [1, 1, 0, 0],
+            [0, 1, 1, 1]],
+          [
+            [1, 1, 1, 0],
+            [0, 0, 1, 1]],
+          [
+            [0, 0, 1, 1],
+            [1, 1, 1, 0]]],
+        [
+          [
+            [0, 1],
+            [1, 1],
+            [0, 1],
+            [0, 1]],
+          [
+            [1, 0],
+            [1, 0],
+            [1, 1],
+            [1, 0]],
+          [
+            [1, 0],
+            [1, 1],
+            [1, 0],
+            [1, 0]],
+          [
+            [0, 1],
+            [0, 1],
+            [1, 1],
+            [0, 1]],
+          [
+            [0, 0, 1, 0],
+            [1, 1, 1, 1]],
+          [
+            [1, 1, 1, 1],
+            [0, 0, 1, 0]],
+          [
+            [0, 1, 0, 0],
+            [1, 1, 1, 1]],
+          [
+            [1, 1, 1, 1],
+            [0, 1, 0, 0]]],
+        [
+          [
+            [0, 1],
+            [1, 1],
+            [1, 1]],
+          [
+            [1, 1],
+            [1, 1],
+            [0, 1]],
+          [
+            [1, 0],
+            [1, 1],
+            [1, 1]],
+          [
+            [1, 1],
+            [1, 1],
+            [1, 0]],
+          [
+            [1, 1, 1],
+            [0, 1, 1]],
+          [
+            [0, 1, 1],
+            [1, 1, 1]],
+          [
+            [1, 1, 1],
+            [1, 1, 0]],
+          [
+            [1, 1, 0],
+            [1, 1, 1]]],
+        [
+          [
+            [1, 1, 1],
+            [1, 0, 1]],
+          [
+            [1, 0, 1],
+            [1, 1, 1]],
+          [
+            [1, 1],
+            [1, 0],
+            [1, 1]],
+          [
+            [1, 1],
+            [0, 1],
+            [1, 1]]],
+        [
+          [
+            [1, 1, 1],
+            [1, 1, 1]],
+          [
+            [1, 1],
+            [1, 1],
+            [1, 1]]],
+        [
+          [
+            [1, 0, 0],
+            [1, 0, 0],
+            [1, 1, 1]],
+          [
+            [0, 0, 1],
+            [0, 0, 1],
+            [1, 1, 1]],
+          [
+            [1, 1, 1],
+            [0, 0, 1],
+            [0, 0, 1]],
+          [
+            [1, 1, 1],
+            [1, 0, 0],
+            [1, 0, 0]]]]
+
+      let board = [
+        [["Jan", false], ["Feb", false], ["Mar", false], ["Apr", false], ["May", false], ["Jun", false], ["   ", true]],
+        [["Jul", false], ["Aug", false], ["Sep", false], ["Oct", false], ["Nov", false], ["Dec", false], ["   ", true]],
+        [["  1", false], ["  2", false], ["  3", false], ["  4", false], ["  5", false], ["  6", false], ["  7", false]],
+        [["  8", false], ["  9", false], [" 10", false], [" 11", false], [" 12", false], [" 13", false], [" 14", false]],
+        [[" 15", false], [" 16", false], [" 17", false], [" 18", false], [" 19", false], [" 20", false], [" 21", false]],
+        [[" 22", false], [" 23", false], [" 24", false], [" 25", false], [" 26", false], [" 27", false], [" 28", false]],
+        [[" 29", false], [" 30", false], [" 31", false], ["    ", true], ["    ", true], ["    ", true], ["    ", true]]
+      ]
+
+      let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+      let month_idx = months.indexOf(month)
+
+      let num_solutions = 0;
+      // we use set so it will be easier to test if we've placed all pieces
+      let used_pieces = new Set()
+      let solutions = []
+      let tries = 0
+
+      let r_month = Math.floor(month_idx / 6)
+      let c_month = month_idx % 6
+      let r_day = Math.floor((day - 1) / 7) + 2
+      let c_day = (day - 1) % 7
+      board[r_month][c_month][0] = -month_idx - 1
+      board[r_month][c_month][1] = true
+      board[r_day][c_day][0] = -day
+      board[r_day][c_day][1] = true
+
+      function print_board(board) {
+        for (let r = 0; r < 7; r++) {
+          let text = ""
+          for (let c = 0; c < 7; c++) {
+            text += board[r][c].toString().padStart(3, ' ')
+          }
+          console.log(text)
+        }
+        console.log("--------------")
+      }
+
+      // all the pos must be in occupied state in the solution
+      // so for each pos, we try all possible pieces
+      // if we're unable to find a piece that will fit, we backtrack
+      // for all pieces that fit, we recurse to the next position
+      // on each level of recursion, we must keep track of all piece types that have been used so far
+      // output of this function is solutions variable, populated as a side-effect
+      function find_solutions(pos) {
+        let row = Math.floor(pos / 7);
+        let col = pos % 7;
+        if (pos === 7 * 7)
+          return
+        if (used_pieces.size === pieces.length) {
+          num_solutions += 1
+          // console.log("Solution found", num_solutions)
+          // print_board()
+          let solution = []
+          for (let r = 0; r < 7; r++) {
+            let solution_row = []
+            for (let c = 0; c < 7; c++) {
+              let piece_num = parseInt(board[r][c][0]);
+              solution_row.push(piece_num)
+            }
+            solution.push(solution_row)
+          }
+          solutions.push(solution)
+          // print_board(solution)
+          return
+        }
+        if (board[row][col][1])
+          find_solutions(pos + 1) // maybe it's not efficient to recurse just to find next position
+        else {
+          for (let pi = 0; pi < pieces.length; pi++) {
+            if (used_pieces.has(pi)) continue
+            let pieces_orientation = pieces[pi]
+            for (let poi = 0; poi < pieces_orientation.length; poi++) {
+              let piece = pieces_orientation[poi]
+              if (can_place(row, col, piece)) {
+                used_pieces.add(pi)
+                place(row, col, piece, pi.toString().padStart(3, ' '))
+                // placing a piece implicitly makes pos occupied, so we proceed to the next pos
+                find_solutions(pos + 1)
+                used_pieces.delete(pi)
+                remove(row, col, piece)
+              }
+            }
+          }
+        }
+      }
+
+      // can memoize this for better performance
+      function initial_column(piece) {
+        for (let c = 0; c < piece[0].length; c++) {
+          if (piece[0][c] === 1)
+            return c
+        }
+      }
+
+      function can_place(row, col, piece) {
+        ic = initial_column(piece)
+        for (let r = 0; r < piece.length; r++) {
+          for (let c = 0; c < piece[0].length; c++) {
+            if (piece[r][c] !== 1) continue
+            let target_row = row + r
+            let target_column = col + c - ic
+            if (target_row < 0 || target_row > 6 ||
+                target_column < 0 || target_column > 6 ||
+                board[target_row][target_column][1])
+              return false;
+          }
+        }
+        return true;
+      }
+
+      function place(row, col, piece, text) {
+        tries += 1
+        ic = initial_column(piece)
+        for (let r = 0; r < piece.length; r++) {
+          for (let c = 0; c < piece[0].length; c++) {
+            if (piece[r][c] !== 1) continue
+            let target_row = row + r
+            let target_column = col + c - ic
+            board[target_row][target_column][0] = text
+            board[target_row][target_column][1] = true
+          }
+        }
+      }
+
+      function remove(row, col, piece) {
+        ic = initial_column(piece)
+        for (let r = 0; r < piece.length; r++) {
+          for (let c = 0; c < piece[0].length; c++) {
+            if (piece[r][c] !== 1) continue
+            let target_row = row + r
+            let target_column = col + c - ic
+            board[target_row][target_column][0] = "  X"
+            board[target_row][target_column][1] = false
+          }
+        }
+      }
+
+      find_solutions(0)
+      return solutions
+    }
+  </script>
+</head>
+<body>
+<label for="month">Month</label>
+<select name="month" id="month">
+  <option value="Jan">January</option>
+  <option value="Feb">February</option>
+  <option value="Mar">March</option>
+  <option value="Apr">April</option>
+  <option value="May">May</option>
+  <option value="Jun">June</option>
+  <option value="Jul">July</option>
+  <option value="Aug">August</option>
+  <option value="Sep">September</option>
+  <option value="Oct">October</option>
+  <option value="Nov">November</option>
+  <option value="Dec">December</option>
+</select>
+<label for="day">Day</label>
+<input name="day" id="day" type="number" min="1" max="31"/>
+<br/>
+<canvas id="canvas"></canvas>
+<script>
+  let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  let month_idx = new Date().getMonth();
+  let month = months[month_idx]
+  let day = new Date().getDate().toString()
+  document.querySelector('#month').value = month;
+  document.querySelector('#month').addEventListener('change', (event) => solve_and_render())
+  document.querySelector('#day').value = day;
+  document.querySelector('#day').addEventListener('change', (event) => solve_and_render())
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+
+  const pieceColors = ['purple', 'green', 'yellow', 'red', 'blue', 'pink', 'orange', 'gray'];
+
+  solve_and_render()
+
+  function solve_and_render() {
+    let month = document.querySelector('#month').value
+    let day = document.querySelector('#day').value
+    let solutions = solve(month, day)
+
+    let tile_size = 20
+    let margin_size = 10
+    let board_size = 7 * tile_size;
+    let columns_of_boards = 7; // there's always at least 7 solutions
+    let width = board_size * columns_of_boards + (columns_of_boards + 1) * margin_size
+    canvas.width = width;
+    let rows_of_boards = Math.floor(solutions.length / 7) + 1;
+    let height = board_size * rows_of_boards + (rows_of_boards + 1) * margin_size
+    canvas.height = height;
+
+    for (let si = 0; si < solutions.length; si++) {
+      let solution = solutions[si]
+
+      // we write 7 per row just because
+      let solution_row_offset = Math.floor(si / 7) * board_size
+      let solution_col_offset = (si % 7) * board_size
+
+      for (let r = 0; r < 7; r++) {
+        let row_offset = r * tile_size + (Math.floor(si / 7) + 1) * margin_size + solution_row_offset
+        for (let c = 0; c < 7; c++) {
+          let col_offset = c * tile_size + ((si % 7) + 1) * margin_size + solution_col_offset
+
+          let piece_idx = solution[r][c];
+          let color = 'white'
+          if (piece_idx < 0) color = 'black'
+          else if (isNaN(piece_idx)) color = 'white'
+          else color = pieceColors[piece_idx];
+          ctx.fillStyle = color;
+          ctx.fillRect(col_offset, row_offset, tile_size, tile_size);
+        }
+      }
+    }
+    solutions = []
+  }
+</script>
+</body>
+</html>
