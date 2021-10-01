@@ -4,6 +4,20 @@
   <meta charset="UTF-8">
   <title>A Puzzle a day solver</title>
   <script>
+
+    let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+    function print_solution(solution) {
+      for (let r = 0; r < 7; r++) {
+        let text = ""
+        for (let c = 0; c < 7; c++) {
+          text += solution[r][c].toString().padStart(3, ' ')
+        }
+        console.log(text)
+      }
+      console.log("--------------")
+    }
+
     function solve(month, day) {
       let pieces = [
         [
@@ -192,44 +206,38 @@
             [1, 0, 0],
             [1, 0, 0]]]]
 
+      // this board is used to track which pieces where placed (via numeric/string value)
+      // and where the the tiles are not yet occupied
+      // we replace values with piece numbers before adding a solution to 'solutions'
       let board = [
-        [["Jan", false], ["Feb", false], ["Mar", false], ["Apr", false], ["May", false], ["Jun", false], ["   ", true]],
-        [["Jul", false], ["Aug", false], ["Sep", false], ["Oct", false], ["Nov", false], ["Dec", false], ["   ", true]],
-        [["  1", false], ["  2", false], ["  3", false], ["  4", false], ["  5", false], ["  6", false], ["  7", false]],
-        [["  8", false], ["  9", false], [" 10", false], [" 11", false], [" 12", false], [" 13", false], [" 14", false]],
-        [[" 15", false], [" 16", false], [" 17", false], [" 18", false], [" 19", false], [" 20", false], [" 21", false]],
-        [[" 22", false], [" 23", false], [" 24", false], [" 25", false], [" 26", false], [" 27", false], [" 28", false]],
-        [[" 29", false], [" 30", false], [" 31", false], ["    ", true], ["    ", true], ["    ", true], ["    ", true]]
+        [[42, false], [42, false], [42, false], [42, false], [42, false], [42, false], [" ", true]],
+        [[42, false], [42, false], [42, false], [42, false], [42, false], [42, false], [" ", true]],
+        [[42, false], [42, false], [42, false], [42, false], [42, false], [42, false], [42, false]],
+        [[42, false], [42, false], [42, false], [42, false], [42, false], [42, false], [42, false]],
+        [[42, false], [42, false], [42, false], [42, false], [42, false], [42, false], [42, false]],
+        [[42, false], [42, false], [42, false], [42, false], [42, false], [42, false], [42, false]],
+        [[42, false], [42, false], [42, false], [" ", true], [" ", true], [" ", true], [" ", true]]
       ]
 
-      let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-      let month_idx = months.indexOf(month)
-
-      let num_solutions = 0;
-      // we use set so it will be easier to test if we've placed all pieces
+      // we use a set so it will be easier to test if we've placed all pieces
       let used_pieces = new Set()
+      // return values populated here
       let solutions = []
-      let tries = 0
 
+      // just a way to figure out the indices of picked items without going through the loop
+      let month_idx = months.indexOf(month)
       let r_month = Math.floor(month_idx / 6)
       let c_month = month_idx % 6
       let r_day = Math.floor((day - 1) / 7) + 2
       let c_day = (day - 1) % 7
-      board[r_month][c_month][0] = -month_idx - 1
+      // mark items as occupied
       board[r_month][c_month][1] = true
-      board[r_day][c_day][0] = -day
       board[r_day][c_day][1] = true
-
-      function print_board(board) {
-        for (let r = 0; r < 7; r++) {
-          let text = ""
-          for (let c = 0; c < 7; c++) {
-            text += board[r][c].toString().padStart(3, ' ')
-          }
-          console.log(text)
-        }
-        console.log("--------------")
-      }
+      // we don't care about actual values because we only render these picked items with colors on UI
+      // here we just making these negative so that we can differentiate them later
+      // from positive integers representing different placed pieces in the solution
+      board[r_month][c_month][0] = -month_idx - 1
+      board[r_day][c_day][0] = -day
 
       // all the pos must be in occupied state in the solution
       // so for each pos, we try all possible pieces
@@ -243,20 +251,16 @@
         if (pos === 7 * 7)
           return
         if (used_pieces.size === pieces.length) {
-          num_solutions += 1
-          // console.log("Solution found", num_solutions)
-          // print_board()
           let solution = []
           for (let r = 0; r < 7; r++) {
             let solution_row = []
             for (let c = 0; c < 7; c++) {
-              let piece_num = parseInt(board[r][c][0]);
-              solution_row.push(piece_num)
+              // empty strings representing unused board tiles will be added as NaN
+              solution_row.push(parseInt(board[r][c][0]))
             }
             solution.push(solution_row)
           }
           solutions.push(solution)
-          // print_board(solution)
           return
         }
         if (board[row][col][1])
@@ -269,7 +273,7 @@
               let piece = pieces_orientation[poi]
               if (can_place(row, col, piece)) {
                 used_pieces.add(pi)
-                place(row, col, piece, pi.toString().padStart(3, ' '))
+                place(row, col, piece, pi)
                 // placing a piece implicitly makes pos occupied, so we proceed to the next pos
                 find_solutions(pos + 1)
                 used_pieces.delete(pi)
@@ -289,7 +293,7 @@
       }
 
       function can_place(row, col, piece) {
-        ic = initial_column(piece)
+        let ic = initial_column(piece)
         for (let r = 0; r < piece.length; r++) {
           for (let c = 0; c < piece[0].length; c++) {
             if (piece[r][c] !== 1) continue
@@ -305,7 +309,6 @@
       }
 
       function place(row, col, piece, text) {
-        tries += 1
         ic = initial_column(piece)
         for (let r = 0; r < piece.length; r++) {
           for (let c = 0; c < piece[0].length; c++) {
@@ -325,7 +328,7 @@
             if (piece[r][c] !== 1) continue
             let target_row = row + r
             let target_column = col + c - ic
-            board[target_row][target_column][0] = "  X"
+            board[target_row][target_column][0] = 42
             board[target_row][target_column][1] = false
           }
         }
@@ -354,10 +357,11 @@
 </select>
 <label for="day">Day</label>
 <input name="day" id="day" type="number" min="1" max="31"/>
+Solutions: <span id="solutions"></span>
 <br/>
 <canvas id="canvas"></canvas>
 <script>
-  let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  // auto-determine current day and evaluate solutions immediately
   let month_idx = new Date().getMonth();
   let month = months[month_idx]
   let day = new Date().getDate().toString()
@@ -368,7 +372,7 @@
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d');
 
-  const pieceColors = ['purple', 'green', 'yellow', 'red', 'blue', 'pink', 'orange', 'gray'];
+  const piece_colors = ['purple', 'green', 'yellow', 'red', 'blue', 'pink', 'orange', 'gray'];
 
   solve_and_render()
 
@@ -376,21 +380,20 @@
     let month = document.querySelector('#month').value
     let day = document.querySelector('#day').value
     let solutions = solve(month, day)
+    document.querySelector('#solutions').textContent = solutions.length
 
     let tile_size = 20
     let margin_size = 10
     let board_size = 7 * tile_size;
     let columns_of_boards = 7; // there's always at least 7 solutions
-    let width = board_size * columns_of_boards + (columns_of_boards + 1) * margin_size
-    canvas.width = width;
+    canvas.width = board_size * columns_of_boards + (columns_of_boards + 1) * margin_size;
     let rows_of_boards = Math.floor(solutions.length / 7) + 1;
-    let height = board_size * rows_of_boards + (rows_of_boards + 1) * margin_size
-    canvas.height = height;
+    canvas.height = board_size * rows_of_boards + (rows_of_boards + 1) * margin_size;
 
     for (let si = 0; si < solutions.length; si++) {
       let solution = solutions[si]
 
-      // we write 7 per row just because
+      // we write 7 per row just because it's a lucky number
       let solution_row_offset = Math.floor(si / 7) * board_size
       let solution_col_offset = (si % 7) * board_size
 
@@ -400,16 +403,15 @@
           let col_offset = c * tile_size + ((si % 7) + 1) * margin_size + solution_col_offset
 
           let piece_idx = solution[r][c];
-          let color = 'white'
-          if (piece_idx < 0) color = 'black'
-          else if (isNaN(piece_idx)) color = 'white'
-          else color = pieceColors[piece_idx];
+          let color
+          if (piece_idx < 0) color = 'black' // mark month and day by 2 black sqares
+          else if (isNaN(piece_idx)) color = 'white' // NaN represents filler tiles along ther border
+          else color = piece_colors[piece_idx];
           ctx.fillStyle = color;
           ctx.fillRect(col_offset, row_offset, tile_size, tile_size);
         }
       }
     }
-    solutions = []
   }
 </script>
 </body>
